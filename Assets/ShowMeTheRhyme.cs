@@ -18,6 +18,12 @@ public class ShowMeTheRhyme : MonoBehaviour
 	bool isLoaded = false;
 	List<string> m_listLine = new List<string>();
 
+	void Awake()
+	{
+		Screen.SetResolution (760, 1280, true);
+		QualitySettings.SetQualityLevel (0);
+	}
+
 	void Start () 
 	{
 		isLoaded = false;
