@@ -14,6 +14,7 @@ public class ShowMeTheRhyme : MonoBehaviour
 	public Text loadText;
 	public GameObject errorNtf;
 	public Text errorText;
+	public GameObject exitPop;
 
 	bool isLoaded = false;
 	List<string> m_listLine = new List<string>();
@@ -38,6 +39,18 @@ public class ShowMeTheRhyme : MonoBehaviour
 		fileNames.Add ("data_2");
 
 		StartCoroutine (LoadTextFile (fileNames));
+	}
+
+	void Update()
+	{
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			exitPop.SetActive (true);
+		}
+	}
+
+	public void OnClickedExit()
+	{
+		Application.Quit ();
 	}
 
 	IEnumerator LoadTextFile(List<string> fileNames)
