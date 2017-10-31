@@ -27,9 +27,9 @@ public class ShowMeTheRhyme : MonoBehaviour
 		dataLoad.SetActive (true);
 
 		List<string> fileNames = new List<string> ();
-		fileNames.Add ("data_0.txt");
-		fileNames.Add ("data_1.txt");
-		fileNames.Add ("data_2.txt");
+		fileNames.Add ("data_0");
+		fileNames.Add ("data_1");
+		fileNames.Add ("data_2");
 
 		StartCoroutine (LoadTextFile (fileNames));
 	}
@@ -43,7 +43,9 @@ public class ShowMeTheRhyme : MonoBehaviour
 		{
 			index = 0;
 			line = "";
-			StreamReader sr = new StreamReader (Application.dataPath + "/Resources/" + fileNames[i]);
+			//StreamReader sr = new StreamReader (Application.dataPath + "/Resources/" + fileNames[i]);
+			TextAsset data = Resources.Load(fileNames[i], typeof(TextAsset)) as TextAsset;
+			StringReader sr = new StringReader(data.text);
 			if (sr == null) {
 				// 오류. 재시작.
 				errorNtf.SetActive (true);
