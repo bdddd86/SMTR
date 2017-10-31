@@ -12,6 +12,8 @@ public class ShowMeTheRhyme : MonoBehaviour
 	public Text resultText;
 	public GameObject dataLoad;
 	public Text loadText;
+	public GameObject errorNtf;
+	public Text errorText;
 
 	bool isLoaded = false;
 	List<string> m_listLine = new List<string>();
@@ -24,35 +26,45 @@ public class ShowMeTheRhyme : MonoBehaviour
 		loadText.text = "데이터 로드 준비";
 		dataLoad.SetActive (true);
 
-		StartCoroutine (LoadTextFile ("data.txt"));
+		List<string> fileNames = new List<string> ();
+		fileNames.Add ("data_0.txt");
+		fileNames.Add ("data_1.txt");
+		fileNames.Add ("data_2.txt");
+
+		StartCoroutine (LoadTextFile (fileNames));
 	}
 
-	IEnumerator LoadTextFile(string fileName)
+	IEnumerator LoadTextFile(List<string> fileNames)
 	{
 		int index = 0;
 		string line = "";
-		StreamReader sr = new StreamReader(Application.dataPath + "/Resources/" + fileName);
-		if (sr == null)
+
+		for (int i = 0; i < fileNames.Count; i++) 
 		{
-			// 오류. 재시작.
-		}
-		else
-		{
-			line = sr.ReadLine();
-			while (line != null)
-			{
-				m_listLine.Add (line);
-				line = sr.ReadLine();
-				index += 1;
-				if (index % 1000 == 0) 
-				{
-					//Debug.Log (string.Format("# Loading Lines:{0}",index));
-					loadText.text = string.Format("데이터 로드 중...({0})",index);
-					yield return null;
+			index = 0;
+			line = "";
+			StreamReader sr = new StreamReader (Application.dataPath + "/Resources/" + fileNames[i]);
+			if (sr == null) {
+				// 오류. 재시작.
+				errorNtf.SetActive (true);
+				errorText.text = "(1001)";
+				yield break;
+			} else {
+				line = sr.ReadLine ();
+				while (line != null) {
+					m_listLine.Add (line);
+					line = sr.ReadLine ();
+					index += 1;
+					if (index == 1 || index % 100 == 0) {
+						//Debug.Log (string.Format("# Loading Lines:{0}",index));
+						loadText.text = string.Format ("데이터 로드 중...[{0}]\n({1}/{2})",index,i+1,fileNames.Count);
+						yield return null;
+					}
 				}
+				sr.Close ();
 			}
-			sr.Close();
 		}
+
 		//Debug.Log (string.Format ("# Load File Line Count:{0}",m_listLine.Count));
 		loadText.text = string.Format("데이터 로드 완료({0})",m_listLine.Count);
 		yield return new WaitForSeconds (0.5f);
